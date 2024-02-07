@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Week 3</string>
+    <string name="Web">Go to Website</string>
+    <string name="Dial">Dial</string>
+    <string name="Contact">Get Contact</string>
+    <string name="Input">Text Input</string>
+</resources>
