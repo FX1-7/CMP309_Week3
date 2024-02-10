@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_dial" />
 
     <EditText
-        android:id="@+id/et_browserUrl"
+        android:id="@+id/get_browserUrl"
         android:layout_width="247dp"
         android:layout_height="64dp"
         android:layout_marginStart="100dp"

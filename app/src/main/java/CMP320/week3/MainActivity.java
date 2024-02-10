@@ -7,13 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_REQUEST_CODE = ;
+    private static final int MY_REQUEST_CODE = 100;
     Button contact, goToWeb, Dial;
 
     EditText url;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         contact = findViewById(R.id.btn_contact);
         goToWeb = findViewById(R.id.btn_goToWeb);
         Dial = findViewById(R.id.btn_dial);
-        url = findViewById(R.id.et_browserUrl);
+        url = findViewById(R.id.get_browserUrl);
 
         Dial.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +52,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if (requestCode == MY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Uri contactUri = i.getData();
+            String[] proj = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
 
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(contactUri, proj, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    String number = cursor.getString(index);
+
+                    EditText browserInput = findViewById(R.id.get_browserUrl);
+                    browserInput.setText(number);
+                }
+            } catch (Exception e) {
+                Log.e("ContactPickerError", "Error getting number", e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         }
     }
 
@@ -80,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER); // find out what the index for the phone number column is
             String number = cursor.getString(numberIndex); // use this index to get the string value from the column in the current row
             /** Don't forget to change the "inputFieldID" to the id of your EditText field */
-            ((EditText)findViewById(R.id.et_browserUrl)).setText(number); // set the text of the input field to the phone number string
+            ((EditText)findViewById(R.id.get_browserUrl)).setText(number); // set the text of the input field to the phone number string
         }
     }
 }
